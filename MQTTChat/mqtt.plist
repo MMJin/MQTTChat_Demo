@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>user</key>
+	<string>admin</string>
+	<key>password</key>
+	<string>public</string>
+	<key>host</key>
+	<string>broker.emqx.io</string>
+	<key>port</key>
+	<real>1883</real>
+	<key>tls</key>
+	<false/>
+	<key>base</key>
+	<string>MQTTChat</string>
+</dict>
+</plist>

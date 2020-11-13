@@ -1,0 +1,31 @@
+PODS:
+  - Masonry (1.1.0)
+  - MQTTClient (0.9.9):
+    - MQTTClient/Core (= 0.9.9)
+  - MQTTClient/Core (0.9.9):
+    - MQTTClient/Manager
+    - MQTTClient/Min
+  - MQTTClient/Manager (0.9.9):
+    - MQTTClient/Min
+  - MQTTClient/Min (0.9.9)
+  - YYModel (1.0.4)
+
+DEPENDENCIES:
+  - Masonry
+  - MQTTClient
+  - YYModel
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - Masonry
+    - MQTTClient
+    - YYModel
+
+SPEC CHECKSUMS:
+  Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
+  MQTTClient: 5a59e0ebcad95f86ad8fc04dd4b819a944e58e0c
+  YYModel: 2a7fdd96aaa4b86a824e26d0c517de8928c04b30
+
+PODFILE CHECKSUM: 2cc73ca7aa5f4fff11cdb9f99a879c0e891f58fb
+
+COCOAPODS: 1.6.1
