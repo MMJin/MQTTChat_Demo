@@ -52,7 +52,7 @@ typedef void(^MqttMassage)(id dataModel,NSString *topic);
 ///断开链接
 -(void)disconnect;
 ///mqtt的连接状态
--(void)getMQTTConnectStatus:(MqttStatus)statusCodeCallBack;
+-(void)getMQTTConnectStatus:(MqttStatus)mqtt_statusCodeCallBack;
 
 /// 设置需要监听的topic  @{@"Nsstring":NSNumber,@"Nsstring":NSNumber]}
 /// @param subTopics @{@"Nsstring":NSNumber,@"Nsstring":NSNumber]}

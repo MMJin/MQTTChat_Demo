@@ -12,9 +12,11 @@
 #import "DKMQTTCommunicationManager.h"
 #import "MQTTTestModel.h"
 #import "Masonry.h"
-@interface BaseViewController ()<UITextFieldDelegate>
-@property(nonatomic,strong)UITextField *textF;
+@interface BaseViewController ()<UITextFieldDelegate,UITableViewDelegate,UITableViewDataSource>
+@property (nonatomic,strong)UITextField *textF;
 @property (strong, nonatomic) DKMQTTCommunicationManager *mqManager;
+@property (strong, nonatomic) NSMutableArray *chat;
+@property (strong,nonatomic) UITableView *tableV;
 @end
 
 @implementation BaseViewController
@@ -24,6 +26,8 @@
     NSURL *bundleURL = [[NSBundle mainBundle] bundleURL];
     NSURL *mqttPlistUrl = [bundleURL URLByAppendingPathComponent:@"mqtt.plist"];
     NSDictionary *dic = [NSDictionary dictionaryWithContentsOfURL:mqttPlistUrl];
+
+    self.chat = [NSMutableArray new];
 
     self.view.backgroundColor = [UIColor redColor];
     UILabel *lab = [[UILabel alloc]init];
@@ -76,29 +80,40 @@
         make.height.mas_equalTo(40);
     }];
 
+    _tableV = [[UITableView alloc]init];
+    _tableV.backgroundColor = UIColor.whiteColor;
+    _tableV.delegate = self;
+    _tableV.dataSource = self;
+    //[_tableV registerNib:[UINib nibWithNibName:@"ChatCell" bundle:nil] forCellReuseIdentifier:@"line"];
+    [self.view addSubview:_tableV];
+
+    [_tableV mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(_textF.mas_bottom).offset(0);
+        make.left.right.mas_equalTo(0);
+        make.bottom.mas_equalTo(0);
+    }];
+
 
     _mqManager = [DKMQTTCommunicationManager shareInstance];
+
+    [_mqManager getMQTTConnectStatus:^(NSString * _Nonnull code) {
+
+        NSLog(@"mqqt连接状态 ：：：%@",code);
+    }];
+
     [_mqManager loginWithIp:dic[@"host"] port:[dic[@"port"] intValue] userName:dic[@"user"] password:dic[@"password"] baseTopic:dic[@"base"] will:[@"offline" dataUsingEncoding:NSUTF8StringEncoding] willQos:MQTTQosLevelExactlyOnce keepalive:20 propertyList:@"topicsModle.plist"];
 
     __weak typeof(self)weakself = self;
     [_mqManager subTopicsWithDic:@{@"MQTTChat/testtopic/text1":[NSNumber numberWithInt:MQTTQosLevelExactlyOnce],@"MQTTChat/text1":[NSNumber numberWithInt:MQTTQosLevelExactlyOnce]} withTopicCallBack:^(id _Nonnull dataModel, NSString * _Nonnull topic) {
 
-
         if ([dataModel isKindOfClass:[MQTTTestModel class]]) {
                     MQTTTestModel *model = (MQTTTestModel*)dataModel;
                     NSLog(@"监听数据返回=-=-=-=-%@",model.msg);
-                }
-//        NSLog(@"返回的topic -- is --%@----json数据%@",topic,dataDic);
-//        [weakself.chat insertObject:[NSString stringWithFormat:@"%@\n%@",topic,dataDic[@"msg"]] atIndex:0];
-//        [weakself.tableView reloadData];
+            [weakself.chat insertObject:[NSString stringWithFormat:@"%@\n%@",topic,model.msg] atIndex:0];
+        }
+        [weakself.tableV reloadData];
     }];
 
-    [_mqManager getMQTTConnectStatus:^(NSString *code) {
-                NSLog(@"连接=========%@",code);
-    }];
-
-
-    
 //    NSLog(@"本地数据获取%@",[DKMQTTDataReceicveManager shareManager].mqttTopicsDatas[@"MQTTChat/testtopic/text1"]);
 //    [[DKMQTTCommunicationManager shareInstance] topicDataCallBack:^(id  _Nonnull dataModel, NSString * _Nonnull topic) {
 //        if ([dataModel isKindOfClass:[MQTTTestModel class]]) {
@@ -127,4 +142,28 @@
 
     }
 }
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    return self.chat.count;
+}
+-(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 1;
+}
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    ////ChatCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"line"];
+    if (!cell) {
+        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"line"];
+    }
+    cell.backgroundColor = [UIColor redColor];
+    cell.detailTextLabel.text = self.chat[indexPath.row];
+    return cell;
+}
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    return NO;
+}
+
+- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
+    return NO;
+}
+
 @end

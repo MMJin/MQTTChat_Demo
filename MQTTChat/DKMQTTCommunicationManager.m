@@ -93,6 +93,9 @@
 }
 //监听状态回调
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    if (!self.statusCodeCallBack) {//没有的话就不执行这个回调
+        return;
+    }
     switch (self.manager.state) {
         case MQTTSessionManagerStateClosed:
             self.statusCodeCallBack(@"连接关闭完成");
@@ -104,14 +107,14 @@
             self.statusCodeCallBack(@"连接完成");
             break;
         case MQTTSessionManagerStateConnecting:
-            self.statusCodeCallBack(@"连接开始");
+            self.statusCodeCallBack(@"连接中");
             break;
         case MQTTSessionManagerStateError:
             self.statusCodeCallBack(@"连接错误");
             break;
         case MQTTSessionManagerStateStarting:
         default:
-            self.statusCodeCallBack(@"连接开始");
+            self.statusCodeCallBack(@"无连接");
             break;
     }
 }
