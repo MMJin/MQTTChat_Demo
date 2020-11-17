@@ -22,6 +22,10 @@
 		E5526CAA255E4D9100957F9F /* topicsModle.plist in Resources */ = {isa = PBXBuildFile; fileRef = E5526CA9255E4D9100957F9F /* topicsModle.plist */; };
 		E5526CAE255E4F8500957F9F /* DKMQTTDataReceicveManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E5526CAD255E4F8500957F9F /* DKMQTTDataReceicveManager.m */; };
 		E5526CB2255E546500957F9F /* MQTTTestModel1.m in Sources */ = {isa = PBXBuildFile; fileRef = E5526CB1255E546500957F9F /* MQTTTestModel1.m */; };
+		E5696D4E25625134003AF54F /* DKMQTTSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E5696D4D25625134003AF54F /* DKMQTTSessionManager.m */; };
+		E5696D52256268C1003AF54F /* TestViewController1.m in Sources */ = {isa = PBXBuildFile; fileRef = E5696D51256268C1003AF54F /* TestViewController1.m */; };
+		E5696D56256268D8003AF54F /* TestViewController2.m in Sources */ = {isa = PBXBuildFile; fileRef = E5696D55256268D8003AF54F /* TestViewController2.m */; };
+		E5696D5A256364B5003AF54F /* DKMQTTSessionManagerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = E5696D59256364B5003AF54F /* DKMQTTSessionManagerTest.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -51,6 +55,14 @@
 		E5526CAD255E4F8500957F9F /* DKMQTTDataReceicveManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DKMQTTDataReceicveManager.m; sourceTree = "<group>"; };
 		E5526CB0255E546500957F9F /* MQTTTestModel1.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MQTTTestModel1.h; sourceTree = "<group>"; };
 		E5526CB1255E546500957F9F /* MQTTTestModel1.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MQTTTestModel1.m; sourceTree = "<group>"; };
+		E5696D4C25625134003AF54F /* DKMQTTSessionManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DKMQTTSessionManager.h; sourceTree = "<group>"; };
+		E5696D4D25625134003AF54F /* DKMQTTSessionManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DKMQTTSessionManager.m; sourceTree = "<group>"; };
+		E5696D50256268C1003AF54F /* TestViewController1.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestViewController1.h; sourceTree = "<group>"; };
+		E5696D51256268C1003AF54F /* TestViewController1.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestViewController1.m; sourceTree = "<group>"; };
+		E5696D54256268D8003AF54F /* TestViewController2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestViewController2.h; sourceTree = "<group>"; };
+		E5696D55256268D8003AF54F /* TestViewController2.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestViewController2.m; sourceTree = "<group>"; };
+		E5696D58256364B5003AF54F /* DKMQTTSessionManagerTest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DKMQTTSessionManagerTest.h; sourceTree = "<group>"; };
+		E5696D59256364B5003AF54F /* DKMQTTSessionManagerTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DKMQTTSessionManagerTest.m; sourceTree = "<group>"; };
 		EA1F75DEFC83D702466D2B87 /* libPods-MQTTChat.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MQTTChat.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -101,6 +113,10 @@
 				84FB53BA1B52A6F50033C370 /* ViewController.m */,
 				E5526C82255D2FE000957F9F /* BaseViewController.h */,
 				E5526C83255D2FE000957F9F /* BaseViewController.m */,
+				E5696D50256268C1003AF54F /* TestViewController1.h */,
+				E5696D51256268C1003AF54F /* TestViewController1.m */,
+				E5696D54256268D8003AF54F /* TestViewController2.h */,
+				E5696D55256268D8003AF54F /* TestViewController2.m */,
 				84068A901B52BFB70010FB52 /* ChatCell.h */,
 				84068A911B52BFB70010FB52 /* ChatCell.m */,
 				84068A8E1B52AC690010FB52 /* mqtt.plist */,
@@ -111,6 +127,10 @@
 				84FB53B21B52A6F50033C370 /* Supporting Files */,
 				E527BDF6255B7B3A00524B15 /* DKMQTTCommunicationManager.h */,
 				E527BDF7255B7B3A00524B15 /* DKMQTTCommunicationManager.m */,
+				E5696D4C25625134003AF54F /* DKMQTTSessionManager.h */,
+				E5696D4D25625134003AF54F /* DKMQTTSessionManager.m */,
+				E5696D58256364B5003AF54F /* DKMQTTSessionManagerTest.h */,
+				E5696D59256364B5003AF54F /* DKMQTTSessionManagerTest.m */,
 				E5526CAC255E4F8500957F9F /* DKMQTTDataReceicveManager.h */,
 				E5526CAD255E4F8500957F9F /* DKMQTTDataReceicveManager.m */,
 				E5526C7E255D217800957F9F /* MQTTTestModel.h */,
@@ -236,12 +256,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				84FB53BB1B52A6F50033C370 /* ViewController.m in Sources */,
+				E5696D56256268D8003AF54F /* TestViewController2.m in Sources */,
+				E5696D4E25625134003AF54F /* DKMQTTSessionManager.m in Sources */,
 				84068A921B52BFB70010FB52 /* ChatCell.m in Sources */,
+				E5696D52256268C1003AF54F /* TestViewController1.m in Sources */,
 				84FB53B81B52A6F50033C370 /* AppDelegate.m in Sources */,
 				E5526CB2255E546500957F9F /* MQTTTestModel1.m in Sources */,
 				E5526C80255D217800957F9F /* MQTTTestModel.m in Sources */,
 				84FB53B51B52A6F50033C370 /* main.m in Sources */,
 				E5526C84255D2FE000957F9F /* BaseViewController.m in Sources */,
+				E5696D5A256364B5003AF54F /* DKMQTTSessionManagerTest.m in Sources */,
 				E5526CAE255E4F8500957F9F /* DKMQTTDataReceicveManager.m in Sources */,
 				E527BDF8255B7B3A00524B15 /* DKMQTTCommunicationManager.m in Sources */,
 			);

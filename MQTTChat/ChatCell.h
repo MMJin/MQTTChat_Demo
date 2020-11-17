@@ -9,6 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface ChatCell : UITableViewCell
-@property (weak, nonatomic) IBOutlet UITextView *textView;
-
+@property (nonatomic, strong) UILabel *settingText; //设定项目名字
 @end

@@ -2,9 +2,13 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>MQTTChat/text1/MQTTChat/text1/MQTTChat/text1/testtopic/text1</key>
+	<string>MQTTTestModel1</string>
 	<key>MQTTChat/testtopic</key>
 	<string>MQTTTestModel1</string>
 	<key>MQTTChat/testtopic/text1</key>
 	<string>MQTTTestModel</string>
+	<key>MQTTChat/text</key>
+	<string>MQTTTestModel1</string>
 </dict>
 </plist>

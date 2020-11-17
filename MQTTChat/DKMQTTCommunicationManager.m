@@ -13,11 +13,11 @@
 #import "DKMQTTDataReceicveManager.h"
 #import <UIKit/UIDevice.h>
 
-@interface DKMQTTCommunicationManager ()<MQTTSessionManagerDelegate>
+@interface DKMQTTCommunicationManager ()<DKMQTTSessionManagerDelegate,MQTTSessionDelegate>
 /*
  * MQTTClient: keep a strong reference to your MQTTSessionManager here
  */
-@property (strong, nonatomic) MQTTSessionManager *manager;
+@property (strong, nonatomic) DKMQTTSessionManager *manager;
 
 @property (strong, nonatomic)  NSMutableDictionary *currentTopicDic;
 
@@ -27,9 +27,9 @@
 @implementation DKMQTTCommunicationManager
 
 #pragma mark 懒加载
--(MQTTSessionManager *)manager{
+-(DKMQTTSessionManager *)manager{
     if (!_manager) {
-        _manager = [[MQTTSessionManager alloc] init];
+        _manager = [[DKMQTTSessionManager alloc] init];
         _manager.delegate = self;
     }
     return _manager;
@@ -68,8 +68,9 @@
     self.currentTopicDic = [NSMutableDictionary dictionaryWithDictionary:dic];
 
 
-    self.manager.subscriptions = [NSDictionary dictionaryWithObject:[NSNumber numberWithInt:willQos]
-                                                             forKey:[NSString stringWithFormat:@"%@/#", topic]];
+//    self.manager.subscriptions = [NSDictionary dictionaryWithObject:[NSNumber numberWithInt:willQos]
+//                                                             forKey:[NSString stringWithFormat:@"%@/#", topic]];
+    self.manager.subscriptions = @{@"MQTTChat/testtopic":[NSNumber numberWithInt:MQTTQosLevelExactlyOnce],@"MQTTChat/text1":[NSNumber numberWithInt:MQTTQosLevelExactlyOnce]};
     [self.manager connectTo:ip
                        port:port
                         tls:NO
@@ -97,22 +98,22 @@
         return;
     }
     switch (self.manager.state) {
-        case MQTTSessionManagerStateClosed:
+        case DKMQTTSessionManagerStateClosed:
             self.statusCodeCallBack(@"连接关闭完成");
             break;
-        case MQTTSessionManagerStateClosing:
+        case DKMQTTSessionManagerStateClosing:
             self.statusCodeCallBack(@"连接关闭中");
             break;
-        case MQTTSessionManagerStateConnected:
+        case DKMQTTSessionManagerStateConnected:
             self.statusCodeCallBack(@"连接完成");
             break;
-        case MQTTSessionManagerStateConnecting:
+        case DKMQTTSessionManagerStateConnecting:
             self.statusCodeCallBack(@"连接中");
             break;
-        case MQTTSessionManagerStateError:
+        case DKMQTTSessionManagerStateError:
             self.statusCodeCallBack(@"连接错误");
             break;
-        case MQTTSessionManagerStateStarting:
+        case DKMQTTSessionManagerStateStarting:
         default:
             self.statusCodeCallBack(@"无连接");
             break;
@@ -144,15 +145,34 @@
 /// @param subTopics @{@"Nsstring":NSNumber,@"Nsstring":NSNumber]}
 -(void)subTopicsWithDic:(NSDictionary *)subTopics withTopicCallBack:(MqttMassage)dataDicCallBack{
     self.dataDicCallBack = dataDicCallBack;
-    [self.manager.session subscribeToTopics:subTopics];
+    [self.manager subTopicsWithDic:subTopics withTopicCallBack:^(NSError *error, NSArray<NSNumber *> *gQoss) {
+        if (!error) {
+            NSLog(@"订阅成功");
+        }
+        else {
+            NSLog(@"订阅失败");
+        }
+    }];
 }
 
 ///移除需要处理的监听
 /// @param udSubTopics @[@"topic1",@"topic2"]
 -(void)unSubTopicsWithDic:(NSArray *)udSubTopics{
-    [self.manager.session unsubscribeTopics:udSubTopics];
+    [self.manager unSubTopicsWithArr:udSubTopics withTopicCallBack:^(NSError *error) {
+        if (!error) {
+            NSLog(@"取消订阅成功");
+        }
+        else {
+            NSLog(@"取消订阅失败");
+        }
+    }];
 }
+-(void)subAckReceived:(MQTTSession *)session msgID:(UInt16)msgID grantedQoss:(NSArray<NSNumber *> *)qoss{
 
+}
+-(void)unsubAckReceived:(MQTTSession *)session msgID:(UInt16)msgID{
+    
+}
 /// 给对应的topic发送数据
 /// @param data 发送的数据
 /// @param topic 操作的topic
@@ -161,10 +181,15 @@
      * MQTTClient: send data to broker
      */
     //需要定义一个id 来确定是同一条数据发送 并且做定时器的超时判断
-    [self.manager sendData:data//[self.message.text dataUsingEncoding:NSUTF8StringEncoding]
+
+   uint msgid =  [self.manager sendData:data//[self.message.text dataUsingEncoding:NSUTF8StringEncoding]
                      topic:topic
                        qos:MQTTQosLevelExactlyOnce
                     retain:FALSE];
+
+    //判断是否有定时器 没有的话创建
+    NSMutableDictionary *dic = [[NSMutableDictionary alloc]init];
+    [dic setValue:[NSNumber numberWithInt:msgid] forKey:topic];
 }
 
 /*
@@ -194,11 +219,10 @@
         //将最新的模型数据存储到本地
         [[DKMQTTDataReceicveManager shareManager].mqttTopicsDatas setObject:objc forKey:topic];
         //将最新的模型数据抛出去
-        self.dataDicCallBack(objc,topic);
+        //self.dataDicCallBack(objc,topic);
     }
 
 }
-
 /// 需要监听数据模型的返回
 /// @param dataDicCallBack 模型 和 主题
 -(void)topicDataCallBack:(MqttMassage)dataDicCallBack{

@@ -11,12 +11,21 @@
 #import "ChatCell.h"
 #import "DKMQTTCommunicationManager.h"
 #import "MQTTTestModel.h"
+#import "MQTTTestModel1.h"
 #import "Masonry.h"
+
+#import "TestViewController1.h"
+
+#import "DKMQTTSessionManagerTest.h"
 @interface BaseViewController ()<UITextFieldDelegate,UITableViewDelegate,UITableViewDataSource>
 @property (nonatomic,strong)UITextField *textF;
 @property (strong, nonatomic) DKMQTTCommunicationManager *mqManager;
 @property (strong, nonatomic) NSMutableArray *chat;
 @property (strong,nonatomic) UITableView *tableV;
+
+@property (strong,nonatomic) UILabel *mqttStatusLab;
+
+@property (strong, nonatomic)DKMQTTSessionManagerTest *test;
 @end
 
 @implementation BaseViewController
@@ -42,14 +51,14 @@
     }];
 
 
-    NSArray *dataArr = @[@"Clear",@"Connect",@"Disconnect"];
+    NSArray *dataArr = @[@"addTopics",@"addTopic",@"Disconnect"];
     for (int i = 0; i<dataArr.count; i++) {
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
         btn.frame = CGRectMake([UIScreen mainScreen].bounds.size.width-20 -(i+1)*80, 80, 80, 30);
         btn.titleLabel.font = [UIFont systemFontOfSize:13];
         //btn.center = CGPointMake(btn.center.x, lab.center.y);
         [btn setTitle:dataArr[i] forState:UIControlStateNormal];
-        btn.tag = 100 + 1;
+        btn.tag = 100 + i;
         [btn addTarget:self action:@selector(clickAction:) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:btn];
 
@@ -88,58 +97,99 @@
     [self.view addSubview:_tableV];
 
     [_tableV mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(_textF.mas_bottom).offset(0);
+        make.top.mas_equalTo(_textF.mas_bottom).offset(44);
         make.left.right.mas_equalTo(0);
-        make.bottom.mas_equalTo(0);
+        make.bottom.mas_equalTo(-100);
+    }];
+    [_tableV layoutIfNeeded];
+
+    _mqttStatusLab = [[UILabel alloc]init];
+    _mqttStatusLab.font = [UIFont systemFontOfSize:15];
+    _mqttStatusLab.text = @"mqtt连接状态";
+    _mqttStatusLab.textAlignment = NSTextAlignmentCenter;
+    [self.view addSubview:_mqttStatusLab];
+    [_mqttStatusLab mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(0);
+        make.bottom.mas_equalTo(-10);
+        make.height.mas_equalTo(44);
     }];
 
+    __weak typeof(self)weakself = self;
 
     _mqManager = [DKMQTTCommunicationManager shareInstance];
 
     [_mqManager getMQTTConnectStatus:^(NSString * _Nonnull code) {
-
+        weakself.mqttStatusLab.text = [NSString stringWithFormat:@"mqqt连接状态 %@",code];
         NSLog(@"mqqt连接状态 ：：：%@",code);
     }];
 
     [_mqManager loginWithIp:dic[@"host"] port:[dic[@"port"] intValue] userName:dic[@"user"] password:dic[@"password"] baseTopic:dic[@"base"] will:[@"offline" dataUsingEncoding:NSUTF8StringEncoding] willQos:MQTTQosLevelExactlyOnce keepalive:20 propertyList:@"topicsModle.plist"];
 
-    __weak typeof(self)weakself = self;
-    [_mqManager subTopicsWithDic:@{@"MQTTChat/testtopic/text1":[NSNumber numberWithInt:MQTTQosLevelExactlyOnce],@"MQTTChat/text1":[NSNumber numberWithInt:MQTTQosLevelExactlyOnce]} withTopicCallBack:^(id _Nonnull dataModel, NSString * _Nonnull topic) {
 
-        if ([dataModel isKindOfClass:[MQTTTestModel class]]) {
-                    MQTTTestModel *model = (MQTTTestModel*)dataModel;
-                    NSLog(@"监听数据返回=-=-=-=-%@",model.msg);
-            [weakself.chat insertObject:[NSString stringWithFormat:@"%@\n%@",topic,model.msg] atIndex:0];
-        }
-        [weakself.tableV reloadData];
-    }];
 
-//    NSLog(@"本地数据获取%@",[DKMQTTDataReceicveManager shareManager].mqttTopicsDatas[@"MQTTChat/testtopic/text1"]);
-//    [[DKMQTTCommunicationManager shareInstance] topicDataCallBack:^(id  _Nonnull dataModel, NSString * _Nonnull topic) {
-//        if ([dataModel isKindOfClass:[MQTTTestModel class]]) {
-//            MQTTTestModel *model = (MQTTTestModel*)dataModel;
-//            NSLog(@"监听数据返回=-=-=-=-%@",model.msg);
-//        }
-//        }];
 
+
+
+
+//    _test = [DKMQTTSessionManagerTest new];
+//
+//    [_test connectedWithHost:dic[@"host"] port:[dic[@"port"] intValue] userName:dic[@"user"] password:dic[@"password"] mqttStatus:^(NSString * _Nonnull code) {
+//        weakself.mqttStatusLab.text = [NSString stringWithFormat:@"mqqt连接状态 %@",code];
+//    }];
 }
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     [_textF resignFirstResponder];
     return YES;
 }
 -(void)clickAction:(UIButton *)sender{
+    __weak typeof(self)weakSelf = self;
     NSLog(@"监听数据返回=-=-=-=-");
     if (sender.tag == 100) {
+//        [_test subTopicsWithDic:@{@"MQTTChat/testtopic":[NSNumber numberWithInt:MQTTQosLevelExactlyOnce],@"MQTTChat/test":[NSNumber numberWithInt:MQTTQosLevelExactlyOnce]} WithDicModel:@{@"MQTTChat/testtopic":@"MQTTTestModel1",@"MQTTChat/test":@"MQTTTestModel"} withTopicCallBack:^(id  _Nonnull dataModel, NSString * _Nonnull topic) {
+//            if ([dataModel isKindOfClass:[MQTTTestModel1 class]]) {
+//                           NSLog(@"兄弟数据回来了");
+//                            MQTTTestModel1 *model = (MQTTTestModel1*)dataModel;
+//                            [weakSelf.chat insertObject:[NSString stringWithFormat:@"%@\n%@",topic,model.msg] atIndex:0];
+//                }
+//            if ([dataModel isKindOfClass:[MQTTTestModel class]]) {
+//                           NSLog(@"兄弟数据有。  回来了");
+//                MQTTTestModel *model = (MQTTTestModel*)dataModel;
+//                [weakSelf.chat insertObject:[NSString stringWithFormat:@"%@\n%@",topic,model.msg] atIndex:0];
+//                }
+//            [weakSelf.tableV reloadData];
+//                } mqttStatus:^(NSString * _Nonnull code) {
+//        }];
+            [_mqManager subTopicsWithDic:@{@"MQTTChat/testtopic/text1":[NSNumber numberWithInt:MQTTQosLevelExactlyOnce],@"MQTTChat/text1":[NSNumber numberWithInt:MQTTQosLevelExactlyOnce],@"MQTTChat/text1/MQTTChat/text1/MQTTChat/text1/testtopic/text1":[NSNumber numberWithInt:MQTTQosLevelExactlyOnce]} withTopicCallBack:^(id _Nonnull dataModel, NSString * _Nonnull topic) {
 
+                if ([dataModel isKindOfClass:[MQTTTestModel1 class]]) {
+                            MQTTTestModel *model = (MQTTTestModel*)dataModel;
+                            NSLog(@"监听数据返回=-=-=-=-%@",model.msg);
+                    [weakSelf.chat insertObject:[NSString stringWithFormat:@"%@\n%@",topic,model.msg] atIndex:0];
+                }
+                [weakSelf.tableV reloadData];
+            }];
     }
     else if(sender.tag == 101){
+                [_test subTopic:@{@"MQTTChat/testtopic1111":@"MQTTTestModel1"} withTopicCallBack:^(id  _Nonnull dataModel, NSString * _Nonnull topic) {
+                    if ([dataModel isKindOfClass:[MQTTTestModel1 class]]) {
+                        NSLog(@"兄弟数据tatatatatatta回来了");
+                        MQTTTestModel1 *model = (MQTTTestModel1*)dataModel;
+                        [weakSelf.chat insertObject:[NSString stringWithFormat:@"%@\n%@",topic,model.msg] atIndex:0];
+                    }
+                    [weakSelf.tableV reloadData];
+                } mqttStatus:^(NSString * _Nonnull code) {
 
+                }];
+       // [_test unsubTopic:@"MQTTChat/testtopic" mqttStatus:^(NSString * _Nonnull code) {
+       // }];
     }
     else if (sender.tag == 102){
-
+         [_test unsubTopic:@"MQTTChat/testtopic1111" mqttStatus:^(NSString * _Nonnull code) {
+         }];
+       // [_test disconnect];
     }
     else if (sender.tag == 200){
-
+        [_test senderData:[self.textF.text dataUsingEncoding:NSUTF8StringEncoding] withTopic:@"MQTTChat/testtopic"];
     }
 }
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
@@ -150,12 +200,11 @@
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     ////ChatCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"line"];
+    ChatCell *cell = [tableView dequeueReusableCellWithIdentifier:@"line"];
     if (!cell) {
-        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"line"];
+        cell = [[ChatCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"line"];
     }
-    cell.backgroundColor = [UIColor redColor];
-    cell.detailTextLabel.text = self.chat[indexPath.row];
+    cell.settingText.text = self.chat[indexPath.row];
     return cell;
 }
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {

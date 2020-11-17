@@ -8,7 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import "MQTTClient.h"
-#import <MQTTClient/MQTTSessionManager.h>
+//#import <MQTTClient/MQTTSessionManager.h>
+#import "DKMQTTSessionManager.h"
 NS_ASSUME_NONNULL_BEGIN
 /**
  Enumeration of MQTTSessionManagerState values
@@ -70,6 +71,7 @@ typedef void(^MqttMassage)(id dataModel,NSString *topic);
 /// @param data 发送的数据
 /// @param topic 操作的topic
 -(void)senderData:(NSData *)data withTopic:(NSString *)topic;
+
 
 @end
 

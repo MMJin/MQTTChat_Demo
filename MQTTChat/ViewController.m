@@ -153,7 +153,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     ChatCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"line"];
-    cell.textView.text = self.chat[indexPath.row];
+    cell.settingText.text = self.chat[indexPath.row];
     return cell;
 }
 
