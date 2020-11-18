@@ -59,7 +59,7 @@
 /// @param willQos MQ的会话等级
 /// @param keepalive 保活确认时间
 /// @param listPath topicsList
--(void)loginWithIp:(NSString *)ip port:(UInt16)port userName:(NSString *)userName password:(NSString *)password baseTopic:(NSString *)topic will:(NSData *)will willQos:(MQTTQosLevel)willQos keepalive:(NSInteger)keepalive propertyList:(NSString *)listPath{
+-(void)loginWithIp:(NSString *)ip port:(UInt16)port userName:(NSString *)userName password:(NSString *)password baseTopic:(NSString *)topic will:(NSData *)will willQos:(MQTTQosLevel)willQos keepalive:(NSInteger)keepalive propertyList:(NSString *)listPath subscriptions:(NSDictionary *)baseSubtopics{
 
 //数据准备
     NSURL *bundleURL = [[NSBundle mainBundle] bundleURL];
@@ -68,9 +68,7 @@
     self.currentTopicDic = [NSMutableDictionary dictionaryWithDictionary:dic];
 
 
-//    self.manager.subscriptions = [NSDictionary dictionaryWithObject:[NSNumber numberWithInt:willQos]
-//                                                             forKey:[NSString stringWithFormat:@"%@/#", topic]];
-    self.manager.subscriptions = @{@"MQTTChat/testtopic":[NSNumber numberWithInt:MQTTQosLevelExactlyOnce],@"MQTTChat/text1":[NSNumber numberWithInt:MQTTQosLevelExactlyOnce]};
+    self.manager.subscriptions = baseSubtopics;
     [self.manager connectTo:ip
                        port:port
                         tls:NO
@@ -219,7 +217,9 @@
         //将最新的模型数据存储到本地
         [[DKMQTTDataReceicveManager shareManager].mqttTopicsDatas setObject:objc forKey:topic];
         //将最新的模型数据抛出去
-        //self.dataDicCallBack(objc,topic);
+        if (self.dataDicCallBack) {
+            self.dataDicCallBack(objc,topic);
+        }
     }
 
 }

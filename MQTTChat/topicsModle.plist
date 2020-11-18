@@ -10,5 +10,7 @@
 	<string>MQTTTestModel</string>
 	<key>MQTTChat/text</key>
 	<string>MQTTTestModel1</string>
+	<key>text/MQTTChat</key>
+	<string>MQTTTestModel1</string>
 </dict>
 </plist>

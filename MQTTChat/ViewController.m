@@ -54,7 +54,7 @@
 
 
     _mqManager = [DKMQTTCommunicationManager shareInstance];
-    [_mqManager loginWithIp:self.mqttSettings[@"host"] port:[self.mqttSettings[@"port"] intValue] userName:self.mqttSettings[@"user"] password:self.mqttSettings[@"password"] baseTopic:[NSString stringWithFormat:@"%@",self.base] will:[@"offline" dataUsingEncoding:NSUTF8StringEncoding] willQos:MQTTQosLevelExactlyOnce keepalive:20 propertyList:@"topicsModle.plist"];
+//    [_mqManager loginWithIp:self.mqttSettings[@"host"] port:[self.mqttSettings[@"port"] intValue] userName:self.mqttSettings[@"user"] password:self.mqttSettings[@"password"] baseTopic:[NSString stringWithFormat:@"%@",self.base] will:[@"offline" dataUsingEncoding:NSUTF8StringEncoding] willQos:MQTTQosLevelExactlyOnce keepalive:20 propertyList:@"topicsModle.plist"];
     
     __weak typeof(self)weakself = self;
     [_mqManager subTopicsWithDic:@{@"MQTTChat/testtopic/text1":[NSNumber numberWithInt:MQTTQosLevelExactlyOnce],@"MQTTChat/text1":[NSNumber numberWithInt:MQTTQosLevelExactlyOnce]} withTopicCallBack:^(NSDictionary * _Nonnull dataDic, NSString * _Nonnull topic) {

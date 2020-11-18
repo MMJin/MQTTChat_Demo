@@ -46,7 +46,7 @@ typedef void(^MqttMassage)(id dataModel,NSString *topic);
 /// @param will 遗嘱 断开链接的话发送的？
 /// @param willQos MQ的会话等级
 /// @param keepalive 保活确认时间
--(void)loginWithIp:(NSString *)ip port:(UInt16)port userName:(NSString *)userName password:(NSString *)password baseTopic:(NSString *)topic will:(NSData *)will willQos:(MQTTQosLevel)willQos keepalive:(NSInteger)keepalive propertyList:(NSString *)listPath;
+-(void)loginWithIp:(NSString *)ip port:(UInt16)port userName:(NSString *)userName password:(NSString *)password baseTopic:(NSString *)topic will:(NSData *)will willQos:(MQTTQosLevel)willQos keepalive:(NSInteger)keepalive propertyList:(NSString *)listPath subscriptions:(NSDictionary *)baseSubtopics;
 
 ///连接
 -(void)connect;
